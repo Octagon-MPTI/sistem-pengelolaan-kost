@@ -1,10 +1,27 @@
-@extends('layouts.app')
-@section('content')
-    <div class="p-4">
-        <h1 class="text-xl font-bold mb-4">{{ isset($penyewa) ? 'Edit' : 'Tambah' }} Penyewa</h1>
+<div x-show="tambahPenyewa" x-cloak x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
+    x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
+    x-transition:leave-end="opacity-0 scale-90"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+
+    <div x-on:click.away="tambahPenyewa = false"
+        class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-lg p-6">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100">
+                {{ isset($penyewa) ? 'Edit' : 'Tambah' }} Penyewa
+            </h2>
+            <button @click="tambahPenyewa = false"
+                class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                ✕
+            </button>
+        </div>
+
+        <!-- Error -->
         @if ($errors->any())
-            <div class="bg-red-100 text-red-700 p-2 mb-4">
-                <ul class="list-disc pl-5">
+            <div class="bg-red-100 text-red-700 p-3 rounded-md mb-4 text-sm">
+                <ul class="list-disc pl-5 space-y-1">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -12,66 +29,96 @@
             </div>
         @endif
 
+        <!-- Form -->
         <form method="POST" action="{{ isset($penyewa) ? route('penyewa.update', $penyewa) : route('penyewa.store') }}"
-            enctype="multipart/form-data">@csrf
+            enctype="multipart/form-data" class="space-y-4">
+            @csrf
             @if (isset($penyewa))
                 @method('PUT')
             @endif
+
             <!-- Nama -->
             <div>
-                <label for="nama" class="block font-medium">Nama</label>
-                <input type="text" name="nama" id="nama" placeholder="Nama" class="border p-2 w-full" required
-                    value="{{ old('nama', $penyewa->nama ?? '') }}">
+                <label for="nama"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Nama</label>
+                <input type="text" name="nama" id="nama" placeholder="Nama"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                    required value="{{ old('nama', $penyewa->nama ?? '') }}">
             </div>
+
+            <!-- No HP -->
             <div>
-                <label for="no_hp" class="block font-medium">No HP</label>
-                <input type="text" name="no_hp" id="no_hp" placeholder="No HP" class="border p-2 w-full" required
-                    value="{{ old('no_hp', $penyewa->no_hp ?? '') }}">
+                <label for="no_hp" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">No
+                    HP</label>
+                <input type="text" name="no_hp" id="no_hp" placeholder="08xxxxx"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                    required value="{{ old('no_hp', $penyewa->no_hp ?? '') }}">
             </div>
+
+            <!-- NIK -->
             <div>
-                <label for="nik" class="block font-medium">NIK</label>
-                <input type="text" name="nik" id="nik" placeholder="NIK" class="border p-2 w-full" required
-                    value="{{ old('nik', $penyewa->nik ?? '') }}">
+                <label for="nik"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">NIK</label>
+                <input type="text" name="nik" id="nik" placeholder="NIK"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                    required value="{{ old('nik', $penyewa->nik ?? '') }}">
             </div>
+
+            <!-- Foto KTP -->
             <div>
-                <label for="foto_ktp" class="block font-medium">Foto KTP</label>
-                <input type="file" name="foto_ktp" id="foto_ktp" class="border p-2 w-full" {{ isset($penyewa) ? '' : 'required' }} accept="image/*">
-                
+                <label for="foto_ktp" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Foto
+                    KTP</label>
+                <input type="file" name="foto_ktp" id="foto_ktp"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
+                    {{ isset($penyewa) ? '' : 'required' }} accept="image/*">
                 @if (isset($penyewa) && $penyewa->foto_ktp)
-                    <p class="mt-2">Foto KTP saat ini:</p>
-                    <img src="{{ asset('storage/' . $penyewa->foto_ktp) }}" alt="Foto KTP" class="w-40 mt-1">
+                    <p class="text-xs text-gray-500 mt-2">Foto KTP saat ini:</p>
+                    <img src="{{ asset('storage/' . $penyewa->foto_ktp) }}" alt="Foto KTP"
+                        class="w-40 mt-1 rounded-md border">
                 @endif
             </div>
 
             <!-- Pilih Kamar -->
             <div>
+                <label for="kamar_id" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Pilih
+                    Kamar</label>
                 @if ($kamars->isEmpty())
-                    <p class="text-red-600">Tidak ada kamar tersedia.</p>
+                    <p class="text-sm text-red-600 bg-red-100 px-3 py-2 rounded-md">Tidak ada kamar tersedia.</p>
                 @else
-                    <label for="kamar_id" class="block font-medium">Pilih Kamar</label>
-                    <select name="kamar_id" id="kamar_id" class="border p-2 w-full">
+                    <select name="kamar_id" id="kamar_id"
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
                         <option value="">-- Pilih Kamar Tersedia --</option>
                         @foreach ($kamars as $kamar)
-                            <option value="{{ $kamar->id }}" {{ (old('kamar_id', $penyewa->kamar_id ?? '') == $kamar->id) ? 'selected' : '' }}>
+                            <option value="{{ $kamar->id }}"
+                                {{ old('kamar_id', $penyewa->kamar_id ?? '') == $kamar->id ? 'selected' : '' }}>
                                 {{ $kamar->nama_kamar }}
                             </option>
                         @endforeach
                     </select>
                 @endif
-
             </div>
+
+            <!-- Status -->
             <div>
-                <label for="status" class="block font-medium">Status</label>
-                <select name="status" id="status" class="border p-2 w-full" required>
-                    <option value="aktif" {{ old('status', $penyewa->status ?? '') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                    <option value="keluar" {{ old('status', $penyewa->status ?? '') == 'keluar' ? 'selected' : '' }}>Keluar</option>
+                <label for="status"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Status</label>
+                <select name="status" id="status"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    required>
+                    <option value="aktif" {{ old('status', $penyewa->status ?? '') == 'aktif' ? 'selected' : '' }}>
+                        Aktif</option>
+                    <option value="keluar" {{ old('status', $penyewa->status ?? '') == 'keluar' ? 'selected' : '' }}>
+                        Keluar</option>
                 </select>
             </div>
 
-            <!-- Submit -->
-            <div class="mt-4">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Simpan</button>
+            <!-- Tombol Simpan -->
+            <div class="pt-4">
+                <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md shadow-sm transition">
+                    Simpan
+                </button>
             </div>
         </form>
     </div>
-@endsection
+</div>

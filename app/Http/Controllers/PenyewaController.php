@@ -12,13 +12,8 @@ class PenyewaController extends Controller
     public function index()
     {
         $penyewas = Penyewa::with('kamar')->get();
-        return view('penyewa.index', compact('penyewas'));
-    }
-
-    public function create()
-    {
         $kamars = Kamar::where('status', 'tersedia')->get();
-        return view('penyewa.create', compact('kamars'));
+        return view('penyewa.index', compact('penyewas', 'kamars'));
     }
 
     public function store(Request $request)
