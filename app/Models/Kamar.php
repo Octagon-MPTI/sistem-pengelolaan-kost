@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Kamar extends Model
 {
     use HasFactory;
-    protected $fillable = ['nama_kamar', 'status', 'fasilitas'];
+    protected $fillable = ['nama_kamar', 'status', 'fasilitas', 'harga'];
     protected $casts = ['fasilitas' => 'array'];
 
     public function penyewa() {

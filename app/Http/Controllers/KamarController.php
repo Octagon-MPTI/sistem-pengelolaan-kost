@@ -23,11 +23,13 @@ class KamarController extends Controller
         Kamar::create([
             'nama_kamar' => $request->nama_kamar,
             'status' => $request->status ?? 'tersedia',
-            'fasilitas' => $request->fasilitas, // Laravel otomatis cast ke json jika di-cast di model
+            'fasilitas' => $request->fasilitas,
+            'harga' => $request->harga,
         ]);
-
+    
         return redirect()->route('kamar.index')->with('success', 'Kamar berhasil ditambahkan.');
     }
+    
 
     public function edit(Kamar $kamar)
     {
@@ -40,6 +42,7 @@ class KamarController extends Controller
             'nama_kamar' => $request->nama_kamar,
             'status' => $request->status,
             'fasilitas' => $request->fasilitas,
+            'harga' => $request->harga,
         ]);
 
         return redirect()->route('kamar.index')->with('success', 'Kamar diperbarui.');

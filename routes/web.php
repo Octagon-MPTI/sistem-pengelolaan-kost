@@ -40,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+
     // Manajemen Kamar
     Route::resource('/kamar', KamarController::class);
 
@@ -48,6 +49,14 @@ Route::middleware(['auth'])->group(function () {
 
     // Pembayaran
     Route::resource('/pembayaran', PembayaranController::class);
+
+    // Nomor Kamar
+    Route::get('/get-kamar/{penyewa}', function (\App\Models\Penyewa $penyewa) {
+        return response()->json([
+            'nomor_kamar' => optional($penyewa->kamar)->nomor_kamar
+        ]);
+    });
+
 
     // Export Transaksi (contoh tambahan)
     // Route::get('/pembayaran-export', [PembayaranController::class, 'export'])->name('pembayaran.export');
