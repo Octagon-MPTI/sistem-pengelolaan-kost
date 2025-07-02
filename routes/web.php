@@ -13,11 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::get('/', function () {
     return view('welcome');
 });
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KamarController;
@@ -49,7 +50,10 @@ Route::middleware(['auth'])->group(function () {
     // Pembayaran
     Route::resource('/pembayaran', PembayaranController::class);
 
+    // Riwayat Pembayaran (role: penyewa)
+    Route::get('/riwayat-bayar', [DashboardController::class, 'riwayatBayar'])->name('riwayat-bayar');
+
+
     // Export Transaksi (contoh tambahan)
     // Route::get('/pembayaran-export', [PembayaranController::class, 'export'])->name('pembayaran.export');
 });
-

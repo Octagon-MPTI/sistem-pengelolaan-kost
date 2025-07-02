@@ -53,6 +53,10 @@
                     class="block px-4 py-2 rounded text-white hover:bg-blue-100 dark:hover:bg-gray-700 {{ request()->routeIs('pembayaran.*') ? 'bg-blue-200 text-black dark:bg-gray-500' : '' }}">
                     Pembayaran
                 </a>
+                <a href="{{ route('riwayat-bayar') }}"
+                    class="block px-4 py-2 rounded text-white hover:bg-blue-100 dark:hover:bg-gray-700 {{ request()->routeIs('pembayaran.*') ? 'bg-blue-200 text-black dark:bg-gray-500' : '' }}">
+                    Riwayat Pembayaran
+                </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="w-full text-left px-4 py-2 rounded hover:bg-red-100 text-red-600">
