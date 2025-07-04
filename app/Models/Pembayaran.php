@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Pembayaran extends Model
 {
     use HasFactory;
-    protected $fillable = ['penyewa_id', 'tanggal_bayar', 'jumlah', 'status'];
+    protected $fillable = ['id', 'nomor_kamar', 'penyewa_id', 'tanggal_bayar', 'jatuh_tempo', 'jumlah', 'status'];
 
-    public function penyewa() {
+    public function penyewa()
+    {
         return $this->belongsTo(Penyewa::class);
     }
 }

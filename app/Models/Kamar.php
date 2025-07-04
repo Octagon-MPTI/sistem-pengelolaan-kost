@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Kamar extends Model
 {
     use HasFactory;
-    protected $fillable = ['nama_kamar', 'status', 'fasilitas'];
+    protected $fillable = ['nama_kamar', 'status', 'harga', 'fasilitas'];
     protected $casts = ['fasilitas' => 'array'];
 
-    public function penyewa() {
+    public function penyewa()
+    {
         return $this->hasOne(Penyewa::class);
     }
 }
